@@ -33,6 +33,7 @@
 
 
 %% 1i. Set Variables
+        addpath(genpath(pwd));
         basePath = '/media/wind/Data Disk/intan/HA_210819_091933/concate_1';
         baseName = bz_BasenameFromBasepath(basePath);
         nChannel = 16;
