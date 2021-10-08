@@ -68,21 +68,27 @@
         raw_data = fread(fid, '*int16');
         raw_data = reshape(raw_data, nChannel, []);
         fclose(fid);
-        
+
 % Down sample from 20kHz to 1500Hz
         down_sample_step = sample_rate / target_rate;
         sampled_data = downsample(raw_data', down_sample_step)';
+%         sampled_data(9, :) = int16(lowpass(double(sampled_data(9, :)), 150, 1250));
 
 % Construct lfp struct
-        lfp = struct();
-        lfp.data = sampled_data';
-        lfp.timestamps = (0:length(sampled_data))' / target_rate;
-        lfp.samplingRate = 1250;
-        lfp.channels = (0:15)';
+%         lfp = struct();
+%         lfp.data = sampled_data';
+%         lfp.timestamps = (0:length(sampled_data))' / target_rate;
+%         lfp.samplingRate = 1250;
+%         lfp.channels = (0:15)';
 %         lfp.interval = [0, max(lfp.timestamps)];
 %         lfp.duration = max(lfp.timestamps);
 %         save(fullfile(basePath, strcat(baseName, '.lfp')), 'lfp');
-        save(fullfile(basePath, 'lfp'), 'lfp');
+
+% Create lfp file
+        fid = fopen(fullfile(basePath, strcat(baseName, '.lfp')), 'w');
+        fwrite(fid, sampled_data, 'int16');
+        fclose(fid);
+
         lfp = bz_GetLFP(lfpChan,'basepath',basePath);           
  
 %% 2.   Ripple detection
@@ -92,12 +98,8 @@
         ripdur = [30 100];
         ripfreq = [130 200];
          
-% Detect SPW-Rs or load structure with detection info if already detected
-        if isempty(dir(fullfile(basePath, '*ripples.events.mat'))) == 1
-            ripples = bz_FindRipples(basePath, lfpChan,'thresholds',ripthresh,'durations',ripdur,'show','on','saveMat',true);
-        else
-            ripples = bz_LoadEvents(basePath,'CA1Ripples');
-        end
+% Detect SPW-Rs
+        ripples = bz_FindRipples(basePath, lfpChan,'thresholds',ripthresh,'durations',ripdur,'show','on','saveMat',true);
 
 % Calculate ripple stats
         [maps,data,stats] = bz_RippleStats(double(lfp.data),lfp.timestamps,ripples);

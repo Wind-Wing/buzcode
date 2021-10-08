@@ -73,3 +73,4 @@ externalPackages/xmltree-2.0/@xmltree/private/xml_findstr.mexa64
 *.events.*
 *.lib
 *.exp
+tutorials/exampleDataStructs/20170505_396um_0um_merge/20170505_396um_0um_merge*
