@@ -34,11 +34,11 @@
 
 %% 1i. Set Variables
         addpath(genpath(pwd));
-        basePath = '/media/wind/Data Disk/intan/HA_210819_091933/concate_1';
+        basePath = '/media/wind/Data Disk/FearCondition/stimulation/';
         baseName = bz_BasenameFromBasepath(basePath);
         nChannel = 16;
         sample_rate = 20000;
-        lfpChan = 8;
+        lfpChan = 0;
         target_rate = 1250;
        
 %% 1ii. Create sessioninfo
@@ -64,7 +64,7 @@
         save(fullfile(basePath, strcat(baseName, '.sessionInfo.mat')), 'sessionInfo');
 
 %% 1iii. Convert data into lfp file
-        fid = fopen(basePath + "/data.bin", 'r');
+        fid = fopen(basePath + "/data_1.bin", 'r');
         raw_data = fread(fid, '*int16');
         raw_data = reshape(raw_data, nChannel, []);
         fclose(fid);
